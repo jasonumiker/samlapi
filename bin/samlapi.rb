@@ -8,37 +8,37 @@ require 'base64'
 require 'highline'
 require 'json'
 
-BASE_URL = 'https://shibidp.cit.cornell.edu/idp/profile/SAML2/Unsolicited/SSO?providerId=urn:amazon:webservices'.freeze
+BASE_URL = 'https://idp.jasonumiker.com/idp/profile/SAML2/Unsolicited/SSO?providerId=urn:amazon:webservices'.freeze
 AWS_ROLE = 'https://aws.amazon.com/SAML/Attributes/Role'.freeze
 AWS_CONFIG_FILE = '/.aws/credentials'.freeze
-REGION = 'us-east-1'.freeze
+REGION = 'ap-southeast-2'.freeze
 OUTPUT_FORMAT = 'json'.freeze
 
 cli = HighLine.new
 
 # Get the federated credentials from the user
-print 'netid: '
-netid = STDIN.gets.chomp
-password = cli.ask('Enter your password:  ') { |q| q.echo = '*' }
+print 'username: '
+username = STDIN.gets.chomp
+password = cli.ask('password:  ') { |q| q.echo = '*' }
 print ''
 
 driver = Selenium::WebDriver.for :firefox
 driver.navigate.to BASE_URL
 
 wait = Selenium::WebDriver::Wait.new(timeout: 30) # seconds
-wait.until { driver.find_element(id: 'netid') }
+wait.until { driver.find_element(id: 'username') }
 
-element = driver.find_element(:id, 'netid')
-element.send_keys netid
+element = driver.find_element(:id, 'username')
+element.send_keys username
 element = driver.find_element(:id, 'password')
 element.send_keys password
-element.submit
+driver.find_element(:css, 'button.form-element.form-button').click
 
 sleep 5
 
 wait.until { driver.find_element(id: 'duo_iframe') }
 driver.switch_to.frame 'duo_iframe'
-wait.until { driver.find_element(name: 'passcode') }
+wait.until { driver.find_element(id: 'login-form') }
 driver.find_element(:css, 'button.positive.auth-button').click
 
 driver.switch_to.default_content
@@ -82,7 +82,7 @@ else
   role_arn = aws_roles[0][:role_arn]
 end
 
-sts = Aws::STS::Client.new(region: 'us-east-1')
+sts = Aws::STS::Client.new(region: 'ap-southeast-2')
 token = sts.assume_role_with_saml(role_arn: role_arn,
                                   principal_arn: principal_arn,
                                   saml_assertion: assertion)
