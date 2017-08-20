@@ -24,12 +24,14 @@ After this command has been run it will prompt you for your username and passwor
 aws --profile saml s3 ls
 ```
 
-## More Info
-https://github.com/CU-CloudCollab/samlapi
-http://blogs.cornell.edu/cloudification/2016/07/05/using-shibboleth-for-aws-api-and-cli-access/
-Base Image can be found here: https://github.com/CU-CommunityApps/docker-xvfb-firefox.
-
 ## Troubleshooting
 To troubleshoot this run the container interactively with `docker run -it --rm --entrypoint=/bin/bash samlapi` and then use irb to paste the samlapi.rb file line-by-line in to the Ruby interpreter and see the results.
 
 Note that you need to use `password = STDIN.gets.chomp` instead when running the command interactively. Paste everything before the username capture, run the username then the password capture, then paste continue - otherwise it'll treat the next line of code as a username/password.
+
+## More Info
+https://github.com/CU-CloudCollab/samlapi
+
+http://blogs.cornell.edu/cloudification/2016/07/05/using-shibboleth-for-aws-api-and-cli-access/
+
+Base Image can be found here: https://github.com/CU-CommunityApps/docker-xvfb-firefox.
