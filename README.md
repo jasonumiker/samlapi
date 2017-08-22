@@ -27,7 +27,7 @@ aws --profile saml s3 ls
 ## Troubleshooting
 To troubleshoot this run the container interactively with `docker run -it --rm --entrypoint=/bin/bash samlapi` and then use irb to paste the samlapi.rb file line-by-line in to the Ruby interpreter and see the results.
 
-Note that you need to use `password = STDIN.gets.chomp` instead when running the command interactively. Paste everything before the username capture, run the username then the password capture, then paste continue - otherwise it'll treat the next line of code as a username/password.
+Note that you need to use `password = STDIN.gets.chomp` instead when running the command interactively. Paste everything before the username capture, run the username then the password capture, then continue - otherwise it'll treat the next line of code as a username/password.
 
 ## More Info
 https://github.com/CU-CloudCollab/samlapi
