@@ -17,9 +17,9 @@ OUTPUT_FORMAT = 'json'.freeze
 cli = HighLine.new
 
 # Get the federated credentials from the user
-print 'username: '
+print 'Username: '
 username = STDIN.gets.chomp
-password = cli.ask('password:  ') { |q| q.echo = '*' }
+password = cli.ask('Password:  ') { |q| q.echo = '*' }
 print ''
 
 driver = Selenium::WebDriver.for :firefox
@@ -34,11 +34,12 @@ element = driver.find_element(:id, 'password')
 element.send_keys password
 driver.find_element(:css, 'button.form-element.form-button').click
 
-sleep 5
+sleep 2
 
 wait.until { driver.find_element(id: 'duo_iframe') }
 driver.switch_to.frame 'duo_iframe'
 wait.until { driver.find_element(id: 'login-form') }
+print 'Requesting Duo Push'
 driver.find_element(:css, 'button.positive.auth-button').click
 
 driver.switch_to.default_content
@@ -95,11 +96,11 @@ config = ParseConfig.new(filename)
 
 # Put the credentials into a specific profile instead of clobbering
 # the default credentials
-config.add_to_group('saml', 'output', OUTPUT_FORMAT)
-config.add_to_group('saml', 'region', REGION)
-config.add_to_group('saml', 'aws_access_key_id', token.credentials.access_key_id)
-config.add_to_group('saml', 'aws_secret_access_key', token.credentials.secret_access_key)
-config.add_to_group('saml', 'aws_session_token', token.credentials.session_token)
+config.add_to_group('default', 'output', OUTPUT_FORMAT)
+config.add_to_group('default', 'region', REGION)
+config.add_to_group('default', 'aws_access_key_id', token.credentials.access_key_id)
+config.add_to_group('default', 'aws_secret_access_key', token.credentials.secret_access_key)
+config.add_to_group('default', 'aws_session_token', token.credentials.session_token)
 
 # Write the updated config file
 file = File.open(filename, 'w')
@@ -108,8 +109,7 @@ file.close
 
 # Give the user some basic info as to what has just happened
 puts "\n\n----------------------------------------------------------------"
-puts 'Your new access key pair has been stored in the AWS configuration file under the saml profile.'
+puts 'Your new access key pair has been stored in the AWS configuration file under the default profile.'
 puts "Note that it will expire at #{token.credentials.expiration}."
 puts 'After this time you may safely rerun this script to refresh your access key pair.'
-puts 'To use this credential call the AWS CLI with the --profile option (e.g. aws --profile saml ec2 describe-instances).'
 puts "----------------------------------------------------------------\n\n"
