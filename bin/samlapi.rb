@@ -34,7 +34,7 @@ element = driver.find_element(:id, 'password')
 element.send_keys password
 driver.find_element(:css, 'button.form-element.form-button').click
 
-sleep 2
+sleep 3
 
 wait.until { driver.find_element(id: 'duo_iframe') }
 driver.switch_to.frame 'duo_iframe'
