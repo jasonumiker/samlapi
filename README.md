@@ -21,7 +21,7 @@ docker run -it --rm -v ~/.aws:/root/.aws samlapi
 After this command has been run it will prompt you for your username and password.  This will be used to login you into your Shibboleth. You will get a push from DUO.  Once you have confirmed the DUO notification, you will be prompted to select the role you wish to use for login, if you have only one role it will choose that automatically.  The credentials will be placed in the default credential file (~/.aws/credentials) and can be used as follows:
 
 ```
-aws --profile saml s3 ls
+aws s3 ls
 ```
 
 ## Troubleshooting
